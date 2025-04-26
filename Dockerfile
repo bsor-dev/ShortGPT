@@ -2,6 +2,23 @@
 FROM python:3.10-slim-bullseye
 RUN apt-get update && apt-get install -y ffmpeg
 
+# Install system dependencies (ffmpeg and build tools)
+#RUN apt-get update && apt-get install -y \
+#ffmpeg \
+#gcc \
+#g++ \
+#python3-dev \
+#&& rm -rf /var/lib/apt/lists/*
+
+# Install system dependencies for building Python packages
+RUN apt-get update && apt-get install -y \
+    gcc \
+    build-essential \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
 # Set the working directory in the container to /app
 WORKDIR /app
 
@@ -10,6 +27,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy the local package directory content into the container at /app
